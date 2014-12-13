@@ -4,6 +4,9 @@ use Encode;
 use JSON;
 use utf8;
 
+# 設定ファイルを読み込み
+my $config = plugin('Config', {file => 'app.conf'});
+
 # 接続人数
 my $clients = {};
 
