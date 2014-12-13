@@ -22,6 +22,7 @@ websocket '/echo' => sub {
 
   # Opened
   $c->app->log->debug('WebSocket opened.');
+  $c->app->log->debug('WebSocket opened client = ' . $id);
 
   # Increase inactivity timeout for connection a bit
   $c->inactivity_timeout(300);
@@ -48,6 +49,8 @@ websocket '/echo' => sub {
   $c->on(finish => sub {
     my ($c, $code, $reason) = @_;
     $c->app->log->debug("WebSocket closed with status $code.");
+    $c->app->log->debug("WebSocket closed with client = " . $id);
+    delete $clients->{$id};
   });
 };
 
