@@ -9,6 +9,9 @@ myApp.factory('EchoScoket', function($rootScope, $log){
         // websocket path
         path: "",
 
+        // 接続状態
+        connected: 0,
+
         //
         messageList: [],
 
@@ -25,7 +28,7 @@ myApp.factory('EchoScoket', function($rootScope, $log){
 
             // メッセージ受信
             ws.onmessage = function(message){
-                $log.log("websocket connect")
+                $log.log("websocket reserve message")
 
                 var res = JSON.parse(message.data);
 
@@ -38,8 +41,11 @@ myApp.factory('EchoScoket', function($rootScope, $log){
 
             // 切断
             ws.onclose = function(){
-                $log.log("websocket disconnect")
-            }
+                $log.log("websocket disconnect");
+                service.connected = 2;
+            };
+
+            service.connected = 1;
 
         },
 
@@ -81,6 +87,12 @@ myApp.controller('MainCtrl', function($scope, $log, EchoScoket){
     // 初回にのみ実行され、websocketの接続処理を実施
     $scope.$watch('EchoScoket.path', function(newVal, oldVal) {
         EchoScoket.connect();
+    });
+
+    $scope.$watch('EchoScoket.connected', function(newVal, oldVal) {
+        if(newVal == 2){
+            EchoScoket.connect();
+        }
     });
 });
 
